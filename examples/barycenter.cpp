@@ -6,29 +6,29 @@
 
 using namespace pmp;
 
-// clang-format off
-int main(int argc, char** argv)
+// clang-format on
+int main(int argc, char **argv)
 {
-SurfaceMesh mesh;
+    SurfaceMesh mesh;
 
-if (argc > 1)
-    read(mesh, argv[1]);
+    if (argc > 1)
+        read(mesh, argv[1]);
 
-//! [barycenter]
-// get pre-defined property storing vertex positions
-auto points = mesh.get_vertex_property<Point>("v:point");
+    //! [barycenter]
+    // get pre-defined property storing vertex positions
+    auto points = mesh.get_vertex_property<Point>("v:point");
 
-Point p(0, 0, 0);
+    Point p(0, 0, 0);
 
-for (auto v : mesh.vertices())
-{
-    // access point property like an array
-    p += points[v];
-}
+    for (auto v : mesh.vertices())
+    {
+        // access point property like an array
+        p += points[v];
+    }
 
-p /= mesh.n_vertices();
+    p /= mesh.n_vertices();
 
-std::cout << "barycenter: " << p << std::endl;
-//! [barycenter]
+    std::cout << "barycenter: " << p << std::endl;
+    //! [barycenter]
 }
 // clang-format on

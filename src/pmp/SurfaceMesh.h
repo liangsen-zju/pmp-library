@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <vector>
 #include <filesystem>
+#include <vector>
 
-#include "pmp/Types.h"
 #include "pmp/Properties.h"
+#include "pmp/Types.h"
 #include "pmp/io/IOFlags.h"
 
 namespace pmp {

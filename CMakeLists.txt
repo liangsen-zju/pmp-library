@@ -8,17 +8,26 @@ cmake_minimum_required(VERSION 3.16.3)
 cmake_policy(SET CMP0072 NEW)
 
 option(PMP_BUILD_EXAMPLES "Build the PMP examples" ON)
-option(PMP_BUILD_TESTS "Build the PMP test programs" ON)
-option(PMP_BUILD_DOCS "Build the PMP documentation" ON)
+option(PMP_BUILD_SCRIPTS "Build the PMP examples" ON)
+option(PMP_BUILD_TESTS "Build the PMP test programs" OFF)
+option(PMP_BUILD_DOCS "Build the PMP documentation" OFF)
 option(PMP_BUILD_VIS "Build the PMP visualization tools" ON)
-option(PMP_INSTALL "Install the PMP library and headers" ON)
+option(PMP_INSTALL "Install the PMP library and headers" OFF)
 
 # set output paths
 set(PROJECT_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
-
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+# 编译时
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
+# 指定输出目录
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)   # 指定执行文件
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)   # 指定库文件
+
 
 if(PMP_BUILD_VIS)
   set(GLFW_SOURCE_DIR "external/glfw")
@@ -106,7 +115,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # set default compiler flags for both gcc and clang
-set(COMMON_CXX_FLAGS "-pedantic -Wall -Wextra -Wshadow -Werror")
+# set(COMMON_CXX_FLAGS "-pedantic -Wall -Wextra -Wshadow -Werror")
+set(COMMON_CXX_FLAGS "-pedantic -Wall -Wextra -Wshadow -Wno-unused-variable")
 
 if((UNIX OR APPLE) AND CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS
@@ -174,22 +184,42 @@ include(clang-tidy)
 # which directories to process
 if(EMSCRIPTEN)
   add_subdirectory(src/pmp)
+
   if(PMP_BUILD_EXAMPLES)
     add_subdirectory(examples)
   endif()
+
+  if(PMP_BUILD_SCRIPTS)
+    add_subdirectory(scripts)
+  endif()
+
 else()
   add_subdirectory(src/pmp)
+
   if(PMP_BUILD_DOCS)
     add_subdirectory(docs)
   endif()
+
   if(PMP_BUILD_EXAMPLES)
     add_subdirectory(examples)
   endif()
+
+  if(PMP_BUILD_SCRIPTS)
+    add_subdirectory(scripts)
+  endif()
+
   if(PMP_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
   endif()
+
 endif()
+
+# add testc
+# add_subdirectory(testc)
+
+
+
 
 if(NOT EMSCRIPTEN AND PMP_INSTALL)
 
